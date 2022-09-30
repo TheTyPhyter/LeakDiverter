@@ -22,11 +22,11 @@ def scraper(page):
     for link in links:
         try:
             if link.text.endswith('/'):
-                print('a',link.text)
+                #print('a',link.text)
                 nextdir = sessionHandler(page.url + link['href'])
                 scraper(nextdir)
             else:
-                print('b',link.text)
+                #print('b',link.text)
                 downloadPage(page.url + link['href'])
         except requests.exceptions.ConnectionError:
             print('Error retrieving ', link.text, '. Trying again...')
@@ -35,7 +35,7 @@ def scraper(page):
 
 def downloadPage(file):
     outFile = file.split('/')[-1]
-    print('c', outFile)
+    #print('c', outFile)
     with sessionHandler(file) as r:
         with open(outFile, 'wb') as f:
             f.write(r.content)
