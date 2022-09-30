@@ -30,7 +30,7 @@ def scraper(page):
                 downloadPage(page.url + link['href'])
         except requests.exceptions.ConnectionError:
             print('Error retrieving ', link.text, '. Trying again...')
-            scraper(page.url + link.text)
+            scraper(sessionHandler(page.url + link.text))
             pass
 
 def downloadPage(file):
