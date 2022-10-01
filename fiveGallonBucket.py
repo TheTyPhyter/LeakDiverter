@@ -11,6 +11,7 @@ import requests
 from bs4 import BeautifulSoup
 
 url = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.onion'
+avoidURLs = ["?C=N;O=D", "?C=D;O=A", "?C=S;O=A", "?C=M;O=A", "Parent Directory"]
 
 os.startfile('<PATH TO tor.exe>')
 
@@ -24,41 +25,41 @@ def sessionHandler(site):
 def scraper(page):
     soup = BeautifulSoup(page.content, 'html.parser', from_encoding="iso-8859-1")
     links = soup.find_all("a")
-    filePath = page.url.split('departments/')[-1].replace('%20', ' ')
     for link in links:
-        try:
-            if link.text.endswith('/'):
-                if not os.path.exists(filePath + link.text):
-                    print('Making new directory: ', filePath + link.text)
-                    os.mkdir(filePath + link.text)
-                #print('a', link.text)
-                nextdir = sessionHandler(page.url + link.text)
-                scraper(nextdir)
-            else:
-                #print('b', link.text)
-                if not os.path.exists(filePath + link.text):
-                    print('Saving new file')
-                    downloadPage(page.url + link.text, filePath)
+        if link['href'] not in avoidURLs and link.text not in avoidURLs:
+            filePath = page.url.split(url)[-1].replace('%20', ' ')
+            fullFilePath = filePath + link.text
+            fUrl = page.url + link.text
+            try:
+                if link.text.endswith('/'):
+                    if not os.path.exists(fullFilePath):
+                        print('Making new directory: ', fullFilePath)
+                        os.mkdir(fullFilePath)
+                    # print('a', link.text)
+                    nextdir = sessionHandler(fUrl)
+                    scraper(nextdir)
                 else:
-                    print('The file ', "\'\'", filePath + link.text, "\'\'", ' already exists, moving on...')
-        except requests.exceptions.ConnectionError:
-            print('Error retrieving ', link.text, '. Trying again...')
-            scraper(sessionHandler(page.url + link.text))
+                    #print('b', link.text)
+                    if not os.path.exists(fullFilePath):
+                        print('Saving new file')
+                        downloadPage(fUrl, fullFilePath)
+                    else:
+                        print('The file \'\'', fullFilePath, '\'\' already exists, moving on...')
+            except requests.exceptions.ConnectionError:
+                print('Error retrieving ', link.text, '. Trying again...')
+                scraper(sessionHandler(fUrl))
 
-        except http.client.RemoteDisconnected:
-            print('Server ended the session, retrying...')
-            scraper(sessionHandler(page.url + link.text))
+            except http.client.RemoteDisconnected:
+                print('Server ended the session, retrying...')
+                scraper(sessionHandler(fUrl))
 
 
-def downloadPage(file, path):
-    outFile = file.split('/')[-1]
-    #print('c', outFile)
-    with sessionHandler(file) as r:
+def downloadPage(url, file):
+    with sessionHandler(url) as r:
         #print('d', path)
-        with open(path + outFile, 'wb') as f:
+        with open(file, 'wb') as f:
             f.write(r.content)
             f.close()
 
 
 scraper(sessionHandler(url))
-
