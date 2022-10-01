@@ -10,8 +10,9 @@ import os.path
 import requests
 from bs4 import BeautifulSoup
 
-url = 'xxxxxxxxxxxxxxxxxxxxxxxxxx.onion'
+url = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.onion'
 
+os.startfile('<PATH TO tor.exe>')
 
 def sessionHandler(site):
     session = requests.session()
@@ -23,19 +24,23 @@ def sessionHandler(site):
 def scraper(page):
     soup = BeautifulSoup(page.content, 'html.parser', from_encoding="iso-8859-1")
     links = soup.find_all("a")
+    filePath = page.url.split('departments/')[-1].replace('%20', ' ')
     for link in links:
         try:
             if link.text.endswith('/'):
+                if not os.path.exists(filePath + link.text):
+                    print('Making new directory: ', filePath + link.text)
+                    os.mkdir(filePath + link.text)
                 #print('a', link.text)
-                nextdir = sessionHandler(page.url + link['href'])
+                nextdir = sessionHandler(page.url + link.text)
                 scraper(nextdir)
             else:
                 #print('b', link.text)
-                if not os.path.exists(link['href']):
+                if not os.path.exists(filePath + link.text):
                     print('Saving new file')
-                    downloadPage(page.url + link['href'])
+                    downloadPage(page.url + link.text, filePath)
                 else:
-                    print('The file ', link.text, ' already exists, moving on...')
+                    print('The file ', "\'\'", filePath + link.text, "\'\'", ' already exists, moving on...')
         except requests.exceptions.ConnectionError:
             print('Error retrieving ', link.text, '. Trying again...')
             scraper(sessionHandler(page.url + link.text))
@@ -45,13 +50,15 @@ def scraper(page):
             scraper(sessionHandler(page.url + link.text))
 
 
-def downloadPage(file):
+def downloadPage(file, path):
     outFile = file.split('/')[-1]
     #print('c', outFile)
     with sessionHandler(file) as r:
-        with open(outFile, 'wb') as f:
+        #print('d', path)
+        with open(path + outFile, 'wb') as f:
             f.write(r.content)
             f.close()
 
 
 scraper(sessionHandler(url))
+
