@@ -71,6 +71,6 @@ try:
     scraper(sessionHandler(url))
 
 except IndexError:
-    print("Welcome to the LeakDiverter.\n Run again with a valid URL [including(especially)] .onion URLsto an"
+    print("Welcome to the LeakDiverter.\n Run again with a valid URL [including(especially)] .onion URLs to an"
           " open directory\n"
           "'usage: python3 LeakDiverter.py <valid URL>'")
