@@ -50,7 +50,7 @@ try:
                             print('Saving new file')
                             downloadPage(fUrl, fullFilePath)
                             fileCount += 1
-                            print(fileCount, 'files donwloaded')
+                            print(fileCount, 'files downloaded')
                         else:
                             print("The file '", fullFilePath, "' already exists, moving on...'")
                 except requests.exceptions.ConnectionError:
