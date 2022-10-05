@@ -14,10 +14,11 @@ from bs4 import BeautifulSoup
 
 try:
     url = sys.argv[1]
+    tor = sys.argv[2]
 
     avoidURLs = ["?C=N;O=D", "?C=D;O=A", "?C=S;O=A", "?C=M;O=A", "Parent Directory"]
 
-    os.startfile('C:\\Users\\TyPhyter\\Desktop\\Tor Browser\\Browser\\TorBrowser\\Tor\\tor.exe')
+    os.startfile(tor)
 
     def sessionHandler(site):
         session = requests.session()
@@ -54,10 +55,14 @@ try:
                             print("The file '", fullFilePath, "' already exists, moving on...'")
                 except requests.exceptions.ConnectionError:
                     print('Error retrieving ', link.text, '. Trying again...')
+                    os.system("taskkill /f /im tor.exe")
+                    os.startfile(tor)
                     scraper(sessionHandler(fUrl))
 
                 except http.client.RemoteDisconnected:
                     print('Server ended the session, retrying...')
+                    os.system("taskkill /f /im tor.exe")
+                    os.startfile(tor)
                     scraper(sessionHandler(fUrl))
 
 
@@ -73,4 +78,4 @@ try:
 except IndexError:
     print("Welcome to the LeakDiverter.\n Run again with a valid URL [including(especially)] .onion URLs to an"
           " open directory\n"
-          "'usage: python3 LeakDiverter.py <valid URL>'")
+          "'usage: python3 LeakDiverter.py <valid URL> <path to tor.exe>'")
