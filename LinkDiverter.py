@@ -11,6 +11,7 @@ import http
 import os.path
 import requests
 from bs4 import BeautifulSoup
+from termcolor import colored
 
 try:
     url = sys.argv[1]
@@ -76,6 +77,6 @@ try:
     scraper(sessionHandler(url))
 
 except IndexError:
-    print("Welcome to the LeakDiverter.\nRun again with a valid URL [including (especially) .onion URLs] to an"
-          " open directory\n\n\n"
-          "usage: 'python3 LeakDiverter.py <valid URL> <'path to tor.exe'>'\n")
+    print(colored('Welcome to the LeakDiverter.\n\n', 'green'), colored('Run again with a valid URL [including '
+                '(especially) .onion URLs] to an open directory\n\n', 'blue'),
+          colored("usage: 'python3 LeakDiverter.py <valid URL> <'path to tor.exe'>'\n", 'green'))
