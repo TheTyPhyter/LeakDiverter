@@ -12,6 +12,7 @@ import os.path
 import requests
 from bs4 import BeautifulSoup
 from termcolor import colored
+from urllib.parse import unquote
 
 try:
     url = sys.argv[1]
@@ -34,7 +35,7 @@ try:
         fileCount = 0
         for link in links:
             if link['href'] not in avoidURLs and link.text not in avoidURLs:
-                filePath = page.url.split(url)[-1].replace('%20', ' ')
+                filePath = unquote(page.url.split(url)[-1])
                 fullFilePath = filePath + link.text
                 fUrl = page.url + link.text
                 try:
