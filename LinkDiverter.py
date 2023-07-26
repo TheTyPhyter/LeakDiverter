@@ -6,7 +6,7 @@
           | |___|  __/ (_| |   <| |__| | |\ V /  __/ |  | ||  __/ |   
           |______\___|\__,_|_|\_\_____/|_| \_/ \___|_|   \__\___|_|   
                                                              
-.:.: Python Script for scraping and downloading files from .onion Websites :.:.
+.:/>  Python Script for scraping and downloading files from .onion Websites <\:.
               
 What:
 - This script will download all files in an open directory from a .onion URL.
