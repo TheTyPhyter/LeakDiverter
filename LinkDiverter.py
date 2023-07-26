@@ -1,9 +1,33 @@
 """
-You must have tor browser and be running the tor service to download from .onion urls.
-This script will download all files in an open directory.
-useful for downloading entire data leaks.
-Painfully slow, but it's python and TOR and Im bad at scripting so idk what you expected...
-Uncomment print lines for debugging.
+         _                _    _____  _                _            
+        | |              | |  |  __ \(_)              | |           
+        | |     ___  __ _| | _| |  | |___   _____ _ __| |_ ___ _ __ 
+        | |    / _ \/ _` | |/ / |  | | \ \ / / _ \ '__| __/ _ \ '__|
+        | |___|  __/ (_| |   <| |__| | |\ V /  __/ |  | ||  __/ |   
+        |______\___|\__,_|_|\_\_____/|_| \_/ \___|_|   \__\___|_|   
+                                                             
+ .:.: Python Script for scraping and downloading files from .onion Websites :.:.
+              
+What:
+- This script will download all files in an open directory from a .onion URL.
+- Written by TheTyPhyter | Tweaked by UberGuidoZ
+
+Requirements:
+- You must have Python 3 installed and working correctly.
+- You must have the Tor browser and be running the Tor service.
+- You must provide the full path to the Tor EXE and the URL.
+
+Result:
+- All files that can be downloaded will be saved to the LDD folder.
+  (That folder will be within the directory this script is run from.)
+- Painfully slow, but it's Tor and Python so I don't know what you were expecting.
+
+Syntax: python3 LeakDiverter.py <valid URL> full_path_to_Tor.exe
+
+Troubleshooting:
+- Read and follow the directions.
+- Uncomment print lines for debugging.
+
 """
 
 import sys
@@ -47,7 +71,7 @@ try:
                         nextdir = sessionHandler(fUrl)
                         scraper(nextdir)
                     else:
-                        #print('b', link.text)
+                        # print('b', link.text)
                         if not os.path.exists(fullFilePath):
                             print('Saving new file')
                             downloadPage(fUrl, fullFilePath)
@@ -69,15 +93,21 @@ try:
 
 
     def downloadPage(url, file):
-        print('Downloading: ', file)
+        # Create the "LDD" directory if it doesn't exist
+        if not os.path.exists("LDD"):
+            os.mkdir("LDD")
+    
+        # Combine the "LDD" directory path with the file name
+        download_path = os.path.join("LDD", file)
+    
+        print('Downloading: ', download_path)
         with sessionHandler(url) as r:
-            #print('d', path)
-            with open(file, 'wb') as f:
+            with open(download_path, 'wb') as f:
                 f.write(r.content)
                 f.close()
     scraper(sessionHandler(url))
 
 except IndexError:
-    print(colored('Welcome to the LeakDiverter.\n\n', 'green'), colored('Run again with a valid URL [including '
-                '(especially) .onion URLs] to an open directory\n\n', 'blue'),
-          colored("usage: 'python3 LeakDiverter.py <valid URL> <'path to tor.exe'>'\n", 'green'))
+    print   (colored('Welcome to the LeakDiverter.\n\n', 'green'),
+             colored('Run again with a valid .onion URL to an open directory\n\n', 'blue'),
+             colored("usage: 'python3 LeakDiverter.py <valid URL> full_path_to_Tor.exe>'\n", 'green'))
