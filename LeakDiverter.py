@@ -110,4 +110,4 @@ try:
 except IndexError:
     print   (colored('Welcome to the LeakDiverter.\n\n', 'green'),
              colored('Run again with a valid .onion URL to an open directory\n\n', 'blue'),
-             colored("usage: 'python3 LeakDiverter.py <valid URL> full_path_to_Tor.exe>'\n", 'green'))
+             colored("usage: 'python3 LeakDiverter.py <valid URL> <full_path_to_Tor.exe>'\n", 'green'))
